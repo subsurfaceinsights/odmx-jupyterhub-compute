@@ -1,0 +1,9 @@
+ARG JUPYTERHUB_VERSION=5.2.0
+FROM quay.io/jupyterhub/singleuser:$JUPYTERHUB_VERSION
+USER root
+RUN apt-get update && apt-get -y install git build-essential libpq-dev
+USER jovyan
+ARG ODMX_REV
+RUN pip install git+https://github.com/subsurfaceinsights/odmx@$ODMX_REV
+RUN pip install seaborn matplotlib missingno scikit-learn
+COPY ./example_notebooks/ /home/jovyan/example_notebooks/

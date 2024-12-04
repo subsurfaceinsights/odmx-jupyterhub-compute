@@ -1,0 +1,7 @@
+ARG JUPYTERHUB_VERSION=5.2.0
+FROM quay.io/jupyterhub/jupyterhub:$JUPYTERHUB_VERSION
+RUN pip install jupyterhub-ldapauthenticator==1.3.2 dockerspawner
+RUN useradd -m -s /bin/bash -N -u 1000 ssi
+ARG DEFAULT_USER
+ARG DEFAULT_PASS
+RUN echo "$DEFAULT_USER:$DEFAULT_PASS" | chpasswd

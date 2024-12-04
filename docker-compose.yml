@@ -1,0 +1,44 @@
+services:
+  jupyterhub:
+    image: subsurfaceinsights/jupyterhub
+    container_name: jupyterhub
+    networks:
+      - jupyterhub
+    volumes:
+      - ./jupyterhub:/srv/jupyterhub
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "${EXTERNAL_IP:-0.0.0.0}:8000:8000"
+    restart: unless-stopped
+
+  odmx-db:
+    image: postgis/postgis:13-3.5
+    container_name: postgres
+    networks:
+      - jupyterhub
+    environment:
+      POSTGRES_USER: odmx
+      POSTGRES_PASSWORD: odmx
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+
+
+  odmx-api:
+    image: subsurfaceinsights/odmx
+    container_name: odmx-api
+    networks:
+      - jupyterhub
+    command: ['uvicorn', 'odmx.rest_api:app', '--host', '0.0.0.0', '--port', '80']
+    environment:
+      DB_HOST: odmx-db
+      DB_USER: odmx
+      DB_PASS: odmx
+      DEBUG: true
+      PROJECT_NAME: example
+    restart: unless-stopped
+
+networks:
+  jupyterhub:
+    name: jupyterhub
+    external: True
