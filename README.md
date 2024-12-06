@@ -18,6 +18,18 @@ container for the integration
 After some time, you should see a message that the jupyterhub environment is
 available at http://127.0.0.1:8000/ (by default)
 
+## Jupyterhub Environment
+
+The work environment is defined by the docker-compose.yml file which creates the ODMX 
+API instance accessible at the hostname `odxm-api` and a postgres-db instance with
+postgis extensions at the hostname `odmx-db`. This is accessible by all users in the 
+environment. The base jupyterhub configuration references a container built in the
+build.sh to be launched with each specific user. 
+
+The default user is created by the build.sh script, additional users can be added using
+adduser inside the jupyterhub container. Jupyterhub can also be configured with external
+authentication such as with an organization's LDAP directory, see juptyerhub docs.
+
 ## Running the examples
 
 After logging in with the default username and password, there are some example
@@ -25,6 +37,9 @@ notebooks in the example_notebooks directory of each user's workspace
 
 - `ODMX_build_example.ipynb` This notebook showcases the building of the
   example ODMX project and doing basic queries
+
+- `ODMX_analysis_example.ipynb` This notebook showcases querying with the ODMX API and
+   visualizing some data
 
 
 ## Acknowledgements
